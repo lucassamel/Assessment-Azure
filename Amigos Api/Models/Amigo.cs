@@ -18,5 +18,6 @@ namespace Amigos_Api.Models
         public List<Amigo> Amigos { get; set; }
         public string PaisOrigem { get; set; }
         public string EstadoOrigem { get; set; }
+        public string ImagemAmigo { get; set; }
     }
 }

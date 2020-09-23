@@ -9,6 +9,7 @@ namespace Paises_Api.Models
     {
         public int PaisId { get; set; }
         public string Nome { get; set; }
+        public string ImagemPais { get; set; }
         public List<Estado> Estados { get; set; }
     }
 }
