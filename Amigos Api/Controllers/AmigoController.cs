@@ -85,11 +85,14 @@ namespace Amigos_Api.Controllers
 
         // PUT api/<AmigoController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<Amigo>>  Put(int id, [FromBody] Amigo amigo)
+        public async Task<ActionResult<Amigo>>  UpdateAmigo(int id, [FromBody] Amigo amigo)
         {
-            var getAmigoId = GetAmigo(id);
+            if(id != amigo.AmigoId)
+            {
+                return BadRequest();
+            }
 
-            var amigoId = new SqlParameter("@AmigoId", getAmigoId);
+            var amigoId = new SqlParameter("@AmigoId", amigo.AmigoId);
             var nome = new SqlParameter("@Nome", amigo.Nome);
             var sobrenome = new SqlParameter("@Sobrenome", amigo.Sobrenome);
             var email = new SqlParameter("@Email", amigo.Email);
