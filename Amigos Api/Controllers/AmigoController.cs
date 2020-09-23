@@ -30,6 +30,11 @@ namespace Amigos_Api.Controllers
             var amigos = new List<Amigo>();
             amigos = _context.Amigos.FromSqlRaw("EXEC GetAmigos").ToList();
 
+            if(amigos == null)
+            {
+                return NoContent();
+            }
+
             return amigos;
         }
 
@@ -41,6 +46,11 @@ namespace Amigos_Api.Controllers
             var amigoId = new SqlParameter("@AmigoId", id);
 
             amigo = _context.Amigos.FromSqlRaw("EXEC GetAmigo @AmigoId", amigoId).ToList();
+
+            if(amigo == null)
+            {
+                return NoContent();
+            }
 
             return amigo;
         }
@@ -75,8 +85,32 @@ namespace Amigos_Api.Controllers
 
         // PUT api/<AmigoController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult<Amigo>>  Put(int id, [FromBody] Amigo amigo)
         {
+            var getAmigoId = GetAmigo(id);
+
+            var amigoId = new SqlParameter("@AmigoId", getAmigoId);
+            var nome = new SqlParameter("@Nome", amigo.Nome);
+            var sobrenome = new SqlParameter("@Sobrenome", amigo.Sobrenome);
+            var email = new SqlParameter("@Email", amigo.Email);
+            var telefone = new SqlParameter("@Telefone", amigo.Telefone);
+            var aniversario = new SqlParameter("@Aniversario", amigo.Aniversario);
+            var pais = new SqlParameter("@PaisOrigem", amigo.PaisOrigem);
+            var estado = new SqlParameter("@EstadoOrigem", amigo.EstadoOrigem);
+
+            var affected = _context.Database.ExecuteSqlRaw("EXEC UpdateAmigo @AmigoId, @Nome, @Sobrenome," +
+                " @Email, @Telefone, @Aniversario, " +
+                "@PaisOrigem, @EstadoOrigem",
+                amigoId, nome, sobrenome, email, telefone, aniversario, pais, estado);
+
+            if (affected > 0)
+            {
+                return Ok();
+            }
+            else
+            {
+                throw new Exception();
+            }           
         }
 
         // DELETE api/<AmigoController>/5
