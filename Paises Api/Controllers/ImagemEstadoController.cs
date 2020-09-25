@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Amigos_Api.Data;
-using Amigos_Api.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -11,30 +9,31 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Paises_Api.Data;
+using Paises_Api.Models;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace Amigos_Api.Controllers
+namespace Paises_Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ImagemController : ControllerBase
+    public class ImagemEstadoController : ControllerBase
     {
-        private readonly AmigosContext _context;
+        private readonly PaisesContext _context;
         private readonly IConfiguration _configuration;
 
-        public ImagemController(AmigosContext context, IConfiguration configuration)
+        public ImagemEstadoController(PaisesContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
         }
 
-        [HttpPost("{id}")]
-        public async Task<IActionResult> Create(int id,IFormFile files)
+
+        [HttpPost]
+        public async Task<IActionResult> Create(int id, IFormFile files)
         {
             //var account = await _userManager.GetUserAsync(this.User);
-           // var perfilLogado = await _context.Amigos
-               // .FirstAsync(p => p.Usuario.Email == account.Email);
+            // var perfilLogado = await _context.Amigos
+            // .FirstAsync(p => p.Usuario.Email == account.Email);
 
             string dir = id + "/";
             string systemFileName = dir + files.FileName;
@@ -62,11 +61,11 @@ namespace Amigos_Api.Controllers
             var imagem = new Uri("https://lucassamelsocialnetwork.blob.core.windows.net/imagens/" +
                 systemFileName).ToString();
 
-            var amigoId = new SqlParameter("@AmigoId", id);
-            var imagemAmigo = new SqlParameter("@ImagemAmigo", imagem);
+            var estadoId = new SqlParameter("@EstadoId", id);
+            var imagemEstado = new SqlParameter("@ImagemEstado", imagem);
 
 
-            var affected = _context.Database.ExecuteSqlRaw("EXEC ImagemAmigo @AmigoId, @ImagemAmigo", amigoId, imagemAmigo);
+            var affected = _context.Database.ExecuteSqlRaw("EXEC ImagemEstado @EstadoId, @ImagemEstado", estadoId, imagemEstado);
 
             if (affected > 0)
             {
@@ -76,7 +75,6 @@ namespace Amigos_Api.Controllers
             {
                 throw new Exception();
             }
-            
         }
 
         [HttpGet]
@@ -121,7 +119,5 @@ namespace Amigos_Api.Controllers
             }
             return Ok();
         }
-
-        
     }
 }

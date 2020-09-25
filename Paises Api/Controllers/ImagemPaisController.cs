@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -14,12 +16,12 @@ namespace Paises_Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ImagemController : ControllerBase
+    public class ImagemPaisController : ControllerBase
     {
         private readonly PaisesContext _context;
         private readonly IConfiguration _configuration;
 
-        public ImagemController(PaisesContext context, IConfiguration configuration)
+        public ImagemPaisController(PaisesContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
@@ -54,7 +56,24 @@ namespace Paises_Api.Controllers
             {
                 await blockBlob.UploadFromStreamAsync(data);
             }
-            return Ok();
+
+            var imagem = new Uri("https://lucassamelsocialnetwork.blob.core.windows.net/imagens/" +
+                systemFileName).ToString();
+
+            var paisId = new SqlParameter("@PaisId", id);
+            var imagemPais = new SqlParameter("@ImagemPais", imagem);
+
+
+            var affected = _context.Database.ExecuteSqlRaw("EXEC ImagemPais @PaisId, @ImagemPais", paisId, imagemPais);
+
+            if (affected > 0)
+            {
+                return Ok();
+            }
+            else
+            {
+                throw new Exception();
+            }
         }
 
         [HttpGet]
