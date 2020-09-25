@@ -1,6 +1,6 @@
 using System;
 
-namespace Mvc_Consume.Models
+namespace TP1_Mvc_Consume.Models
 {
     public class ErrorViewModel
     {
