@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amigos_Api.Data;
 using Amigos_Api.Models;
+using Amigos_Api.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +19,13 @@ namespace Amigos_Api.Controllers
     public class AmigoController : ControllerBase
     {
         private readonly AmigosContext _context;
+        //private readonly ImagemService _ImageService;
 
-        public AmigoController(AmigosContext context)
+        public AmigoController(AmigosContext context
+           /* ImagemService imagemService*/)
         {
             _context = context;
+            //_ImageService = imagemService;
         }
 
         // GET: api/<AmigoController>
@@ -126,5 +131,29 @@ namespace Amigos_Api.Controllers
 
             return NoContent();
         }
+
+        //IMAGEM
+        [HttpPut("{id}/imagem")]
+        public async Task<IActionResult> ImagemAmigo(int id, string file)
+        {
+            var imagem = new Uri("https://lucassamelsocialnetwork.blob.core.windows.net/imagens/" + 
+                file).ToString();
+
+            var amigoId = new SqlParameter("@AmigoId", id);
+            var imagemAmigo = new SqlParameter("@ImagemAmigo", imagem);
+
+
+            var affected = _context.Database.ExecuteSqlRaw("EXEC ImagemAmigo @AmigoId, @ImagemAmigo", amigoId, imagemAmigo);
+
+            if (affected > 0)
+            {
+                return Ok();
+            }
+            else
+            {
+                throw new Exception();
+            }
+        }
+
     }
 }

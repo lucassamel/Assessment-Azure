@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Amigos_Api.Data;
 using Amigos_Api.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,29 +9,23 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace Amigos_Api.Controllers
+namespace Mvc_Consume.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ImagemController : ControllerBase
+    public class ImagemController : Controller
     {
-        private readonly AmigosContext _context;
         private readonly IConfiguration _configuration;
 
-        public ImagemController(AmigosContext context, IConfiguration configuration)
+        public ImagemController(IConfiguration configuration)
         {
-            _context = context;
             _configuration = configuration;
         }
 
         [HttpPost("{id}")]
-        public async Task<IActionResult> Create(int id,IFormFile files)
+        public async Task<IActionResult> Create(int id, IFormFile files)
         {
             //var account = await _userManager.GetUserAsync(this.User);
-           // var perfilLogado = await _context.Amigos
-               // .FirstAsync(p => p.Usuario.Email == account.Email);
+            // var perfilLogado = await _context.Amigos
+            // .FirstAsync(p => p.Usuario.Email == account.Email);
 
             string dir = id + "/";
             string systemFileName = dir + files.FileName;
@@ -56,7 +49,7 @@ namespace Amigos_Api.Controllers
             {
                 await blockBlob.UploadFromStreamAsync(data);
             }
-            return Ok();
+            return View("Views/Amigos/Index");
         }
 
         [HttpGet]
@@ -101,7 +94,5 @@ namespace Amigos_Api.Controllers
             }
             return Ok();
         }
-
-        
     }
 }

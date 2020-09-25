@@ -74,13 +74,13 @@ namespace Mvc_Consume.Controllers
 
         // GET: AmigosController/Edit/5
         // GET: PaisesController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit( )
         {
             return View();
         }
 
         // POST: AmigosController/Edit/5
-        [ValidateAntiForgeryToken]
+        
         [HttpPut("{id}")]
         public async Task<IActionResult> Edit(int id, Amigo amigo)
         {
@@ -133,5 +133,36 @@ namespace Mvc_Consume.Controllers
                 return View();
             }
         }
+
+
+        public ActionResult Foto(int id)
+        {
+            return View();
+        }
+
+        //Postar a foto
+        [HttpPost]
+        public async Task<IActionResult> Foto(IFormFile files, int id)
+        {
+            var amigo = new Amigo();
+            string imagem = files.FileName;
+
+            using (var httpClient = new HttpClient())
+            {
+                StringContent content = new StringContent(JsonConvert.SerializeObject(imagem), Encoding.UTF8, "application/json");
+                using (var response = await httpClient.PutAsync("http://localhost:51427/api/amigo/imagem" + $"{id}/imagem", content))
+                {
+                    string apiResponse = await
+                    response.Content.ReadAsStringAsync();
+                    amigo = JsonConvert.DeserializeObject<Amigo>(apiResponse);
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
     }
+
+   
+   
 }

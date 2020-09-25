@@ -70,12 +70,13 @@
                 @Html.DisplayFor(modelItem => item.EstadoOrigem)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ImagemAmigo)
+                <a href="@Html.DisplayFor(modelItem => item.ImagemAmigo)">Imagem</a>               
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new {  id=item.AmigoId  }) |
                 @Html.ActionLink("Details", "Details", new {  id=item.AmigoId  }) |
                 @Html.ActionLink("Delete", "Delete", new {  id=item.AmigoId  })
+                @Html.ActionLink("Foto", "Foto", new { id = item.AmigoId })
             </td>
         </tr>
 }
