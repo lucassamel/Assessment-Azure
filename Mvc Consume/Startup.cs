@@ -50,7 +50,7 @@ namespace Mvc_Consume
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Amigos}/{action=Index}/{id?}");
             });
         }
     }

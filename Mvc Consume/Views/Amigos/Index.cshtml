@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Amigos_Api.Models.Amigo>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AmigoId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sobrenome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Aniversario)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaisOrigem)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EstadoOrigem)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImagemAmigo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmigoId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sobrenome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telefone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Aniversario)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaisOrigem)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EstadoOrigem)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImagemAmigo)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {  id=item.AmigoId  }) |
+                @Html.ActionLink("Details", "Details", new {  id=item.AmigoId  }) |
+                @Html.ActionLink("Delete", "Delete", new {  id=item.AmigoId  })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
