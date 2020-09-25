@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mvc_Consume.Helper;
+using Newtonsoft.Json;
+using Paises_Api.Models;
 
 namespace Mvc_Consume.Controllers
 {
@@ -13,15 +17,33 @@ namespace Mvc_Consume.Controllers
         PaisesApi _api = new PaisesApi();
 
         // GET: PaisesController
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View();
+            List<Pais> amigos = new List<Pais>();
+            HttpClient client = _api.Initial();
+            HttpResponseMessage res = await client.GetAsync("api/pais");
+
+            if (res.IsSuccessStatusCode)
+            {
+                var result = res.Content.ReadAsStringAsync().Result;
+                amigos = JsonConvert.DeserializeObject<List<Pais>>(result);
+            }
+
+            return View(amigos);
         }
 
         // GET: PaisesController/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            return View();
+            var pais = new Pais();
+            HttpClient client = _api.Initial();
+            HttpResponseMessage res = await client.GetAsync($"api/pais/{id}");
+            if (res.IsSuccessStatusCode)
+            {
+                var result = res.Content.ReadAsStringAsync().Result;
+                pais = JsonConvert.DeserializeObject<Pais>(result);
+            }
+            return View(pais);
         }
 
         // GET: PaisesController/Create
@@ -32,17 +54,20 @@ namespace Mvc_Consume.Controllers
 
         // POST: PaisesController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(Pais pais)
         {
-            try
+            var recivePais = new Pais();
+            using (var httpClient = new HttpClient())
             {
-                return RedirectToAction(nameof(Index));
+                StringContent content = new StringContent(JsonConvert.SerializeObject(pais), Encoding.UTF8, "application/json");
+                using (var response = await httpClient.PostAsync("http://localhost:51482/api/pais", content))
+                {
+                    string apiResponse = await
+                    response.Content.ReadAsStringAsync();
+                    recivePais = JsonConvert.DeserializeObject<Pais>(apiResponse);
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: PaisesController/Edit/5
@@ -52,24 +77,44 @@ namespace Mvc_Consume.Controllers
         }
 
         // POST: PaisesController/Edit/5
-        [HttpPost]
+  
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Edit(int id, Pais pais)
         {
-            try
+            Pais recivePais = new Pais();
+
+            if (id != pais.PaisId)
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest();
             }
-            catch
+
+            using (var httpClient = new HttpClient())
             {
-                return View();
+                StringContent content = new StringContent(JsonConvert.SerializeObject(pais), Encoding.UTF8, "application/json");
+                using (var response = await httpClient.PutAsync("http://localhost:51482/api/pais/" + $"{id}", content))
+                {
+                    string apiResponse = await
+                    response.Content.ReadAsStringAsync();
+                    recivePais = JsonConvert.DeserializeObject<Pais>(apiResponse);
+                }
             }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: PaisesController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            var pais = new Pais();
+            HttpClient client = _api.Initial();
+            HttpResponseMessage res = await client.DeleteAsync($"api/pais/{id}");
+            if (res.IsSuccessStatusCode)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View("Index");
         }
 
         // POST: PaisesController/Delete/5

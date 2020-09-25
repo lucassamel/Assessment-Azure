@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Paises_Api.Models.Pais>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PaisId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImagemPais)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaisId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImagemPais)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {  id=item.PaisId  }) |
+                @Html.ActionLink("Details", "Details", new {  id=item.PaisId  }) |
+                @Html.ActionLink("Delete", "Delete", new {  id=item.PaisId  })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

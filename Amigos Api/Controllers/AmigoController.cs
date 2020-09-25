@@ -42,17 +42,18 @@ namespace Amigos_Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<Amigo>>> GetAmigo(int id)
         {
-            var amigo = new List<Amigo>();
+            var amigoList = new List<Amigo>();
             var amigoId = new SqlParameter("@AmigoId", id);
 
-            amigo = _context.Amigos.FromSqlRaw("EXEC GetAmigo @AmigoId", amigoId).ToList();
+            amigoList = _context.Amigos.FromSqlRaw("EXEC GetAmigo @AmigoId", amigoId).ToList();
 
-            if(amigo == null)
+            if(amigoList == null)
             {
                 return NoContent();
-            }
+            }          
 
-            return amigo;
+
+            return amigoList;
         }
 
         // POST api/<AmigoController>

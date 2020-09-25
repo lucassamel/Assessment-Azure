@@ -54,7 +54,7 @@ namespace Mvc_Consume.Controllers
         }
 
         // POST: AmigosController/Create
-        
+
         [HttpPost]
         public async Task<IActionResult> Create(Amigo Amigo)
         {
@@ -73,24 +73,36 @@ namespace Mvc_Consume.Controllers
         }
 
         // GET: AmigosController/Edit/5
+        // GET: PaisesController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
         // POST: AmigosController/Edit/5
-        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Edit(int id, Amigo amigo)
         {
-            try
+            Amigo reciveAmigo = new Amigo();
+
+            if (id != amigo.AmigoId)
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest();
             }
-            catch
+
+            using (var httpClient = new HttpClient())
             {
-                return View();
+                StringContent content = new StringContent(JsonConvert.SerializeObject(amigo), Encoding.UTF8, "application/json");
+                using (var response = await httpClient.PutAsync("http://localhost:51427/api/amigo/"+$"{id}", content))
+                {
+                    string apiResponse = await
+                    response.Content.ReadAsStringAsync();
+                    reciveAmigo = JsonConvert.DeserializeObject<Amigo>(apiResponse);
+                }
             }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: AmigosController/Delete/5
