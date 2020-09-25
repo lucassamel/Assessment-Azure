@@ -27,7 +27,7 @@ namespace Paises_Api.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost]
+        [HttpPost("{id}")]
         public async Task<IActionResult> Create(int id, IFormFile files)
         {
             //var account = await _userManager.GetUserAsync(this.User);

@@ -34,12 +34,14 @@
                 @Html.DisplayFor(modelItem => item.Nome)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ImagemPais)
+                <a href="@Html.DisplayFor(modelItem => item.ImagemPais)">Imagem</a>
+                
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new {  id=item.PaisId  }) |
-                @Html.ActionLink("Details", "Details", new {  id=item.PaisId  }) |
-                @Html.ActionLink("Delete", "Delete", new {  id=item.PaisId  })
+                @Html.ActionLink("Edit", "Edit", new { id = item.PaisId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.PaisId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.PaisId }) |
+                @Html.ActionLink("Foto", "Foto", new { id = item.PaisId })
             </td>
         </tr>
 }

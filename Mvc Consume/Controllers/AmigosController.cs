@@ -36,13 +36,13 @@ namespace Mvc_Consume.Controllers
         // GET: AmigosController/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var amigo = new Amigo();
+            var amigo = new List<Amigo>();
             HttpClient client = _api.Initial();
             HttpResponseMessage res = await client.GetAsync($"api/amigo/{id}");
             if (res.IsSuccessStatusCode)
             {
                 var result = res.Content.ReadAsStringAsync().Result;
-                amigo = JsonConvert.DeserializeObject<Amigo>(result);
+                amigo = JsonConvert.DeserializeObject<List<Amigo>>(result);
             }
             return View(amigo);
         }

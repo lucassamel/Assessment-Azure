@@ -131,5 +131,10 @@ namespace Mvc_Consume.Controllers
                 return View();
             }
         }
+
+        public ActionResult Foto(int id)
+        {
+            return View();
+        }
     }
 }
